@@ -6,7 +6,8 @@ const router = express.Router();
 router.get('/health', (req, res) => {
   res.json({
     success: true,
-    message: 'Glowmark Order Simulator API is running',
+    message: 'Multi-Store Order Simulator API is running',
+    stores: ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'],
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
@@ -41,17 +42,26 @@ router.post('/scheduler/trigger', async (req, res) => {
 // API documentation endpoint
 router.get('/docs', (req, res) => {
   const apiDocs = {
-    title: 'Glowmark Order Simulator API',
-    version: '1.0.0',
-    description: 'API for simulating order processing with automatic status progression',
+    title: 'Multi-Store Order Simulator API',
+    version: '2.0.0',
+    description: 'API for simulating order processing across multiple stores with automatic status progression',
+    supportedStores: ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'],
     endpoints: {
-      orders: {
-        'POST /api/orders': 'Create a new order',
-        'GET /api/orders/user/:userId': 'Get all orders for a user',
+      glowmarkOrders: {
+        'POST /api/orders/glowmark': 'Create a new Glowmark order',
+        'GET /api/orders/glowmark/user/:userId': 'Get all Glowmark orders for a user',
+        'GET /api/orders/glowmark/:orderId': 'Get specific Glowmark order details',
+        'GET /api/orders/glowmark/:orderId/status': 'Get Glowmark order status and history',
+        'PUT /api/orders/glowmark/:orderId/cancel': 'Cancel a Glowmark order',
+        'GET /api/orders/glowmark/stats/summary': 'Get Glowmark order statistics'
+      },
+      genericOrders: {
+        'POST /api/orders': 'Create a new order (defaults to glowmark)',
+        'GET /api/orders/user/:userId': 'Get all orders for a user (all stores)',
         'GET /api/orders/:orderId': 'Get specific order details',
         'GET /api/orders/:orderId/status': 'Get order status and history',
         'PUT /api/orders/:orderId/cancel': 'Cancel an order',
-        'GET /api/orders/stats/summary': 'Get order statistics'
+        'GET /api/orders/stats/summary': 'Get order statistics (all stores)'
       },
       system: {
         'GET /api/health': 'Health check',
@@ -67,19 +77,42 @@ router.get('/docs', (req, res) => {
       'completed (3 min)',
       'cancelled (any time)'
     ],
-    exampleRequest: {
-      url: 'POST /api/orders',
-      body: {
-        userId: 'user123',
-        items: [
-          {
-            productId: '66ab1e45c9aeeb2d95105140',
-            title: 'Finch Dried Red Cherries 750G',
-            price: 990,
-            quantity: 2
-          }
-        ]
+    storeExamples: {
+      glowmark: {
+        url: 'POST /api/orders/glowmark',
+        body: {
+          userId: 'user123',
+          items: [
+            {
+              productId: '66ab1e45c9aeeb2d95105140',
+              title: 'Finch Dried Red Cherries 750G',
+              price: 990,
+              quantity: 2
+            }
+          ]
+        }
+      },
+      generic: {
+        url: 'POST /api/orders',
+        body: {
+          userId: 'user123',
+          store: 'glowmark',
+          items: [
+            {
+              productId: '66ab1e45c9aeeb2d95105140',
+              title: 'Finch Dried Red Cherries 750G',
+              price: 990,
+              quantity: 2
+            }
+          ]
+        }
       }
+    },
+    orderIdFormats: {
+      glowmark: 'GLW-timestamp-hash',
+      kapuruka: 'KPR-timestamp-hash',
+      lassana_flora: 'LSF-timestamp-hash',
+      onlinekade: 'OLK-timestamp-hash'
     }
   };
 

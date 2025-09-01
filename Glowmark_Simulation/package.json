@@ -1,7 +1,7 @@
 {
-  "name": "glowmark-order-simulator",
-  "version": "1.0.0",
-  "description": "Order simulation API for Glowmark store",
+  "name": "multistore-order-simulator",
+  "version": "2.0.0",
+  "description": "Multi-store order simulation API with automatic status progression",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -24,7 +24,7 @@
     "jest": "^29.6.4",
     "supertest": "^6.3.3"
   },
-  "keywords": ["api", "mongodb", "order-simulation", "express"],
+  "keywords": ["api", "mongodb", "order-simulation", "express", "multi-store", "glowmark", "kapuruka"],
   "author": "Tech-Titans-AI",
   "license": "MIT"
 }

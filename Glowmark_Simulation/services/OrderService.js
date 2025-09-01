@@ -2,9 +2,17 @@ const Order = require('../models/Order');
 const { v4: uuidv4 } = require('uuid');
 
 class OrderService {
-  // Generate unique order ID
-  static generateOrderId() {
-    return `ORD-${Date.now()}-${uuidv4().substr(0, 8).toUpperCase()}`;
+  // Generate unique order ID with store prefix
+  static generateOrderId(store = 'glowmark') {
+    const storePrefix = {
+      'glowmark': 'GLW',
+      'kapuruka': 'KPR',
+      'lassana_flora': 'LSF',
+      'onlinekade': 'OLK'
+    };
+    
+    const prefix = storePrefix[store] || 'GLW';
+    return `${prefix}-${Date.now()}-${uuidv4().substr(0, 8).toUpperCase()}`;
   }
 
   // Calculate next status update time
@@ -37,11 +45,17 @@ class OrderService {
   // Create a new order
   static async createOrder(orderData) {
     try {
-      const { userId, items } = orderData;
+      const { userId, items, store = 'glowmark' } = orderData;
 
       // Validate required fields
       if (!userId || !items || !Array.isArray(items) || items.length === 0) {
         throw new Error('UserId and items are required');
+      }
+
+      // Validate store
+      const validStores = ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'];
+      if (!validStores.includes(store)) {
+        throw new Error(`Invalid store. Must be one of: ${validStores.join(', ')}`);
       }
 
       // Calculate total amount and prepare items
@@ -60,14 +74,15 @@ class OrderService {
         };
       });
 
-      // Create order
-      const orderId = this.generateOrderId();
+      // Create order with store-specific ID
+      const orderId = this.generateOrderId(store);
       const estimatedDelivery = new Date(Date.now() + 3 * 60000); // 3 minutes from now
       const nextStatusUpdate = this.calculateNextStatusUpdate('pending');
 
       const order = new Order({
         orderId,
         userId,
+        store,
         items: processedItems,
         totalAmount,
         status: 'pending',
@@ -76,7 +91,7 @@ class OrderService {
       });
 
       // Add initial status to history
-      order.addStatusHistory('pending', 'Order created successfully');
+      order.addStatusHistory('pending', `Order created successfully for ${store}`);
 
       await order.save();
       return order;
@@ -85,14 +100,17 @@ class OrderService {
     }
   }
 
-  // Get orders by user ID
+  // Get orders by user ID with optional store filtering
   static async getOrdersByUserId(userId, options = {}) {
     try {
-      const { limit = 50, skip = 0, status } = options;
+      const { limit = 50, skip = 0, status, store } = options;
       
       let query = { userId };
       if (status) {
         query.status = status;
+      }
+      if (store) {
+        query.store = store;
       }
 
       const orders = await Order.find(query)
@@ -179,30 +197,42 @@ class OrderService {
     }
   }
 
-  // Get orders ready for status update
-  static async getOrdersForStatusUpdate() {
+  // Get orders ready for status update with optional store filtering
+  static async getOrdersForStatusUpdate(store = null) {
     try {
-      return await Order.getOrdersForStatusUpdate();
+      return await Order.getOrdersForStatusUpdate(store);
     } catch (error) {
       throw new Error(`Failed to get orders for update: ${error.message}`);
     }
   }
 
-  // Get order statistics
-  static async getOrderStats(userId = null) {
+  // Get order statistics with optional store and user filtering
+  static async getOrderStats(userId = null, store = null) {
     try {
       let matchQuery = {};
       if (userId) {
         matchQuery.userId = userId;
+      }
+      if (store) {
+        matchQuery.store = store;
       }
 
       const stats = await Order.aggregate([
         { $match: matchQuery },
         {
           $group: {
-            _id: '$status',
+            _id: { status: '$status', store: '$store' },
             count: { $sum: 1 },
             totalAmount: { $sum: '$totalAmount' }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            status: '$_id.status',
+            store: '$_id.store',
+            count: 1,
+            totalAmount: 1
           }
         }
       ]);
