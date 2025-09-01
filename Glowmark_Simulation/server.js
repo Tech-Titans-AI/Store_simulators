@@ -43,9 +43,12 @@ app.use(limiter);
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://yourdomain.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000'],
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
   credentials: true
 }));
+
+// Serve static files from frontend directory
+app.use(express.static('./frontend'));
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));

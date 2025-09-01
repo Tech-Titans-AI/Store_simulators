@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glowmark Admin Panel - Order Management</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-placeholder">
+                        <i class="fas fa-gem"></i>
+                        <span>Glowmark</span>
+                    </div>
+                    <h1>Order Management Admin Panel</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <div class="status-indicator">
+                        <span class="status-dot" id="connectionStatus"></span>
+                        <span id="connectionText">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalOrders">-</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="pendingOrders">-</h3>
+                        <p>Pending Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="transitOrders">-</h3>
+                        <p>In Transit</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="pickupOrders">-</h3>
+                        <p>Store Pickup</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="completedOrders">-</h3>
+                        <p>Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="cancelledOrders">-</h3>
+                        <p>Cancelled</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Controls Section -->
+        <section class="controls-section">
+            <div class="controls-content">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="userSearch" placeholder="Search by User ID..." onkeyup="filterUsers()">
+                    </div>
+                    <div class="filter-box">
+                        <select id="statusFilter" onchange="filterByStatus()">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="in_transit">In Transit</option>
+                            <option value="store_pickup">Store Pickup</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="view-controls">
+                    <button class="btn btn-secondary" onclick="toggleView('list')" id="listViewBtn">
+                        <i class="fas fa-list"></i> List View
+                    </button>
+                    <button class="btn btn-secondary active" onclick="toggleView('cards')" id="cardsViewBtn">
+                        <i class="fas fa-th-large"></i> Cards View
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="loading-spinner" id="loadingSpinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading orders...</p>
+            </div>
+
+            <div class="users-container" id="usersContainer" style="display: none;">
+                <!-- User cards will be dynamically inserted here -->
+            </div>
+
+            <div class="no-data" id="noDataMessage" style="display: none;">
+                <i class="fas fa-inbox"></i>
+                <h3>No Orders Found</h3>
+                <p>There are no orders to display at the moment.</p>
+            </div>
+        </main>
+
+        <!-- Order Details Modal -->
+        <div class="modal-overlay" id="orderModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Order Details</h2>
+                    <button class="modal-close" onclick="closeOrderModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Order details will be inserted here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+                    <button class="btn btn-danger" id="cancelOrderBtn" onclick="cancelOrder()">
+                        <i class="fas fa-ban"></i> Cancel Order
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Order Modal -->
+        <div class="modal-overlay" id="createOrderModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Create New Order</h2>
+                    <button class="modal-close" onclick="closeCreateOrderModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="createOrderForm">
+                        <div class="form-group">
+                            <label for="newUserId">User ID</label>
+                            <input type="text" id="newUserId" required placeholder="Enter user ID">
+                        </div>
+                        <div class="form-group">
+                            <label>Items</label>
+                            <div id="itemsList">
+                                <div class="item-row">
+                                    <input type="text" placeholder="Product ID" class="product-id" required>
+                                    <input type="text" placeholder="Product Title" class="product-title" required>
+                                    <input type="number" placeholder="Price" class="product-price" min="0" required>
+                                    <input type="number" placeholder="Quantity" class="product-quantity" min="1" required>
+                                    <button type="button" class="btn-remove-item" onclick="removeItem(this)">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary" onclick="addItem()">
+                                <i class="fas fa-plus"></i> Add Item
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeCreateOrderModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="createOrder()">
+                        <i class="fas fa-plus"></i> Create Order
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <button class="fab" onclick="openCreateOrderModal()" title="Create New Order">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
