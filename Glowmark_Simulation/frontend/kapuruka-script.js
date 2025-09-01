@@ -7,10 +7,31 @@ let allUsers = [];
 let allOrders = [];
 let selectedOrder = null;
 let refreshTimer = null;
+let currentStore = 'kapuruka'; // Fixed to Glowmark
 
-// Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
-    initializeApp();
+// Store switching function with navigation
+function switchStore(store) {
+    console.log('Navigating to store:', store);
+    
+    // Navigate to the store-specific page
+    window.location.href = `${store}.html`;
+}
+
+// Legacy function for compatibility
+function switchTab(store) {
+    switchStore(store);
+}
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', async () => {
+    // Set initial theme for Glowmark
+    console.log('DOM loaded, initializing Glowmark store...');
+    
+    // Set theme
+    document.body.className = 'theme-kapuruka';
+    
+    // Initialize the app
+    await initializeApp();
 });
 
 async function initializeApp() {
@@ -56,7 +77,7 @@ async function loadData() {
 
 async function loadStatistics() {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/orders/onlinekade/stats/summary`);
+        const response = await fetch(`${API_BASE_URL}/api/orders/${currentStore}/stats/summary`);
         const data = await response.json();
         
         if (data.success) {
@@ -69,10 +90,6 @@ async function loadStatistics() {
 
 async function loadAllOrders() {
     try {
-        // Load all OnlineKade orders
-        const response = await fetch(`${API_BASE_URL}/api/orders/stats/summary`);
-        const statsData = await response.json();
-        
         // Get unique users by making requests for orders
         const userOrdersMap = new Map();
         
@@ -92,13 +109,11 @@ async function loadAllOrders() {
 
 async function loadOrdersForDisplay(userOrdersMap) {
     try {
-        // Since we don't have a direct way to get all users, we'll use a workaround
-        // by getting orders and grouping them by user
         const testUsers = ['user123', 'demo-user-001', 'demo-user-002', 'test-user-123'];
         
         for (const userId of testUsers) {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/orders/onlinekade/user/${userId}`);
+                const response = await fetch(`${API_BASE_URL}/api/orders/${currentStore}/user/${userId}`);
                 const data = await response.json();
                 
                 if (data.success && data.data.length > 0) {
@@ -107,7 +122,7 @@ async function loadOrdersForDisplay(userOrdersMap) {
                     allOrders.push(...data.data);
                 }
             } catch (error) {
-                console.log(`No orders found for user ${userId}`);
+                console.log(`No orders found for user ${userId} in store ${currentStore}`);
             }
         }
     } catch (error) {
@@ -127,8 +142,8 @@ function updateStatistics(stats) {
     };
     
     stats.forEach(stat => {
-        if (stat.store === 'onlinekade') {
-            statCounts[stat.status] = stat.count;
+        if (stat.store === currentStore) {
+            statCounts[stat.status] = (statCounts[stat.status] || 0) + stat.count;
             statCounts.total += stat.count;
         }
     });
@@ -207,7 +222,7 @@ function createOrderItem(order) {
 // Modal Functions
 async function showOrderDetails(orderId) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/orders/onlinekade/${orderId}`);
+        const response = await fetch(`${API_BASE_URL}/api/orders/${currentStore}/${orderId}`);
         const data = await response.json();
         
         if (data.success) {
@@ -338,6 +353,7 @@ function closeCreateOrderModal() {
 
 function resetCreateOrderForm() {
     document.getElementById('createOrderForm').reset();
+    document.getElementById('newOrderStore').value = currentStore; // Set to current store
     const itemsList = document.getElementById('itemsList');
     itemsList.innerHTML = `
         <div class="item-row">
@@ -377,6 +393,7 @@ function removeItem(button) {
 
 async function createOrder() {
     const userId = document.getElementById('newUserId').value.trim();
+    const store = document.getElementById('newOrderStore').value;
     const itemRows = document.querySelectorAll('.item-row');
     
     if (!userId) {
@@ -400,7 +417,7 @@ async function createOrder() {
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/orders/onlinekade`, {
+        const response = await fetch(`${API_BASE_URL}/api/orders/${store}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -413,7 +430,10 @@ async function createOrder() {
         if (data.success) {
             showSuccess('Order created successfully!');
             closeCreateOrderModal();
-            refreshData();
+            // Only refresh if we're viewing the same store
+            if (currentStore === store) {
+                refreshData();
+            }
         } else {
             showError(data.message || 'Failed to create order');
         }
@@ -432,7 +452,7 @@ async function cancelOrder() {
     }
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/orders/onlinekade/${selectedOrder.orderId}/cancel`, {
+        const response = await fetch(`${API_BASE_URL}/api/orders/${currentStore}/${selectedOrder.orderId}/cancel`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

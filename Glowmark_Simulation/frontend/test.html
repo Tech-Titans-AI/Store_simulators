@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Navigation Test</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background 0.3s ease;
+        }
+        
+        .theme-glowmark { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .theme-kapuruka { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .theme-onlinekade { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); }
+        
+        .store-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+
+        .store-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .store-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .store-btn.active {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(255, 255, 255, 0.8);
+            color: #2c3e50;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .theme-glowmark .store-btn[data-store="glowmark"].active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .theme-kapuruka .store-btn[data-store="kapuruka"].active {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            border-color: #059669;
+        }
+
+        .theme-onlinekade .store-btn[data-store="onlinekade"].active {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border-color: #dc2626;
+        }
+        
+        .content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body class="theme-glowmark">
+    <div>
+        <h1 style="color: white; text-align: center; margin-bottom: 2rem;">Store Navigation Test</h1>
+        
+        <div class="store-navigation">
+            <button class="store-btn active" data-store="glowmark" onclick="switchStore('glowmark')">
+                <span>💎 Glowmark</span>
+            </button>
+            <button class="store-btn" data-store="kapuruka" onclick="switchStore('kapuruka')">
+                <span>🛍️ Kapuruka</span>
+            </button>
+            <button class="store-btn" data-store="onlinekade" onclick="switchStore('onlinekade')">
+                <span>💻 OnlineKade</span>
+            </button>
+        </div>
+        
+        <div class="content">
+            <h2>Current Store: <span id="currentStore">Glowmark</span></h2>
+            <p>Click the buttons above to switch stores and see the theme change!</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStore = 'glowmark';
+        
+        function switchStore(store) {
+            console.log('Switching to store:', store);
+            currentStore = store;
+            
+            // Update active button
+            document.querySelectorAll('.store-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const activeBtn = document.querySelector(`[data-store="${store}"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                console.log('Active button set for:', store);
+            } else {
+                console.error('Button not found for store:', store);
+            }
+            
+            // Update body theme
+            document.body.className = `theme-${store}`;
+            
+            // Update content
+            const storeNames = {
+                'glowmark': 'Glowmark',
+                'kapuruka': 'Kapuruka',
+                'onlinekade': 'OnlineKade'
+            };
+            document.getElementById('currentStore').textContent = storeNames[store];
+        }
+    </script>
+</body>
+</html>

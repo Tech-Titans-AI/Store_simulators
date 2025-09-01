@@ -7,18 +7,28 @@ let allUsers = [];
 let allOrders = [];
 let selectedOrder = null;
 let refreshTimer = null;
-let currentStore = 'glowmark'; // Start with Glowmark instead of 'all'
+let currentStore = 'glowmark'; // Fixed to Glowmark
+
+// Store switching function with navigation
+function switchStore(store) {
+    console.log('Navigating to store:', store);
+    
+    // Navigate to the store-specific page
+    window.location.href = `${store}.html`;
+}
+
+// Legacy function for compatibility
+function switchTab(store) {
+    switchStore(store);
+}
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    // Set initial theme and store
-    console.log('DOM loaded, initializing app...');
+    // Set initial theme for Glowmark
+    console.log('DOM loaded, initializing Glowmark store...');
     
-    // Set initial theme
+    // Set theme
     document.body.className = 'theme-glowmark';
-    
-    // Set initial store selection
-    switchStore('glowmark');
     
     // Initialize the app
     await initializeApp();
@@ -343,6 +353,7 @@ function closeCreateOrderModal() {
 
 function resetCreateOrderForm() {
     document.getElementById('createOrderForm').reset();
+    document.getElementById('newOrderStore').value = currentStore; // Set to current store
     const itemsList = document.getElementById('itemsList');
     itemsList.innerHTML = `
         <div class="item-row">
@@ -462,19 +473,6 @@ async function cancelOrder() {
         console.error('Error cancelling order:', error);
         showError('Failed to cancel order');
     }
-}
-
-// Store switching function with navigation
-function switchStore(store) {
-    console.log('Navigating to store:', store);
-    
-    // Navigate to the store-specific page
-    window.location.href = `${store}.html`;
-}
-
-// Legacy function for compatibility
-function switchTab(store) {
-    switchStore(store);
 }
 
 // Filter and Search Functions

@@ -30,6 +30,46 @@ router.post('/glowmark', addStoreContext('glowmark'), async (req, res) => {
   }
 });
 
+// Kapuruka-specific create order
+router.post('/kapuruka', addStoreContext('kapuruka'), async (req, res) => {
+  try {
+    const orderData = { ...req.body, store: 'kapuruka' };
+    const order = await OrderService.createOrder(orderData);
+    res.status(201).json({
+      success: true,
+      message: 'Kapuruka order created successfully',
+      store: 'kapuruka',
+      data: order
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// OnlineKade-specific create order
+router.post('/onlinekade', addStoreContext('onlinekade'), async (req, res) => {
+  try {
+    const orderData = { ...req.body, store: 'onlinekade' };
+    const order = await OrderService.createOrder(orderData);
+    res.status(201).json({
+      success: true,
+      message: 'OnlineKade order created successfully',
+      store: 'onlinekade',
+      data: order
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
 // Get all Glowmark orders for a specific user
 router.get('/glowmark/user/:userId', async (req, res) => {
   try {
@@ -185,6 +225,248 @@ router.get('/glowmark/stats/summary', async (req, res) => {
     });
   }
 });
+
+// ==================== KAPURUKA STORE ENDPOINTS ====================
+
+// Get all Kapuruka orders for a specific user
+router.get('/kapuruka/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { limit, skip, status } = req.query;
+    
+    const options = {
+      limit: parseInt(limit) || 50,
+      skip: parseInt(skip) || 0,
+      store: 'kapuruka'
+    };
+    
+    if (status) {
+      options.status = status;
+    }
+
+    const orders = await OrderService.getOrdersByUserId(userId, options);
+    
+    res.json({
+      success: true,
+      message: 'Kapuruka orders retrieved successfully',
+      store: 'kapuruka',
+      data: orders,
+      count: orders.length
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// Get specific Kapuruka order by order ID
+router.get('/kapuruka/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await OrderService.getOrderById(orderId);
+    
+    // Verify it's a Kapuruka order
+    if (order.store && order.store !== 'kapuruka') {
+      return res.status(404).json({
+        success: false,
+        message: 'Kapuruka order not found',
+        data: null
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'Kapuruka order retrieved successfully',
+      store: 'kapuruka',
+      data: order
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// Cancel Kapuruka order
+router.put('/kapuruka/:orderId/cancel', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+    
+    // First check if it's a Kapuruka order
+    const existingOrder = await OrderService.getOrderById(orderId);
+    if (existingOrder.store && existingOrder.store !== 'kapuruka') {
+      return res.status(404).json({
+        success: false,
+        message: 'Kapuruka order not found',
+        data: null
+      });
+    }
+    
+    const order = await OrderService.cancelOrder(orderId, reason);
+    
+    res.json({
+      success: true,
+      message: 'Kapuruka order cancelled successfully',
+      store: 'kapuruka',
+      data: order
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// Get Kapuruka order statistics
+router.get('/kapuruka/stats/summary', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const stats = await OrderService.getOrderStats(userId, 'kapuruka');
+    
+    res.json({
+      success: true,
+      message: 'Kapuruka order statistics retrieved successfully',
+      store: 'kapuruka',
+      data: stats
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// ==================== ONLINEKADE STORE ENDPOINTS ====================
+
+// Get all OnlineKade orders for a specific user
+router.get('/onlinekade/user/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { limit, skip, status } = req.query;
+    
+    const options = {
+      limit: parseInt(limit) || 50,
+      skip: parseInt(skip) || 0,
+      store: 'onlinekade'
+    };
+    
+    if (status) {
+      options.status = status;
+    }
+
+    const orders = await OrderService.getOrdersByUserId(userId, options);
+    
+    res.json({
+      success: true,
+      message: 'OnlineKade orders retrieved successfully',
+      store: 'onlinekade',
+      data: orders,
+      count: orders.length
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// Get specific OnlineKade order by order ID
+router.get('/onlinekade/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await OrderService.getOrderById(orderId);
+    
+    // Verify it's an OnlineKade order
+    if (order.store && order.store !== 'onlinekade') {
+      return res.status(404).json({
+        success: false,
+        message: 'OnlineKade order not found',
+        data: null
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: 'OnlineKade order retrieved successfully',
+      store: 'onlinekade',
+      data: order
+    });
+  } catch (error) {
+    res.status(404).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// Cancel OnlineKade order
+router.put('/onlinekade/:orderId/cancel', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { reason } = req.body;
+    
+    // First check if it's an OnlineKade order
+    const existingOrder = await OrderService.getOrderById(orderId);
+    if (existingOrder.store && existingOrder.store !== 'onlinekade') {
+      return res.status(404).json({
+        success: false,
+        message: 'OnlineKade order not found',
+        data: null
+      });
+    }
+    
+    const order = await OrderService.cancelOrder(orderId, reason);
+    
+    res.json({
+      success: true,
+      message: 'OnlineKade order cancelled successfully',
+      store: 'onlinekade',
+      data: order
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// Get OnlineKade order statistics
+router.get('/onlinekade/stats/summary', async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const stats = await OrderService.getOrderStats(userId, 'onlinekade');
+    
+    res.json({
+      success: true,
+      message: 'OnlineKade order statistics retrieved successfully',
+      store: 'onlinekade',
+      data: stats
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+      data: null
+    });
+  }
+});
+
+// ==================== GENERIC ENDPOINTS ====================
 
 // Generic endpoints (maintain backward compatibility)
 // Create a new order (defaults to glowmark for backward compatibility)

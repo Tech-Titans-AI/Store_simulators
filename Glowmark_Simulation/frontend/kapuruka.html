@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OnlineKade Admin Panel - Order Management</title>
+    <title>Kapuruka Store - Order Management</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="theme-kapuruka">
     <div class="admin-container">
         <!-- Header -->
         <header class="header">
             <div class="header-content">
                 <div class="logo-section">
                     <div class="logo-placeholder">
-                        <i class="fas fa-gem"></i>
-                        <span>OnlineKade</span>
+                        <i class="fas fa-shopping-bag"></i>
+                        <span id="currentStoreName">Kapuruka</span>
                     </div>
-                    <h1>Order Management Admin Panel</h1>
+                    <h1>Kapuruka Store - Order Management</h1>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-primary" onclick="refreshData()">
@@ -34,8 +34,24 @@
             </div>
         </header>
 
+        <!-- Store Navigation Buttons -->
+        <div class="store-navigation">
+            <button class="store-btn" data-store="glowmark" onclick="switchStore('glowmark')">
+                <i class="fas fa-gem"></i>
+                Glowmark
+            </button>
+            <button class="store-btn active" data-store="kapuruka" onclick="switchStore('kapuruka')">
+                <i class="fas fa-shopping-bag"></i>
+                Kapuruka
+            </button>
+            <button class="store-btn" data-store="onlinekade" onclick="switchStore('onlinekade')">
+                <i class="fas fa-laptop"></i>
+                OnlineKade
+            </button>
+        </div>
+
         <!-- Statistics Section -->
-        <section class="stats-section">
+        <section class="stats-section" id="statsSection">
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">
@@ -52,7 +68,7 @@
                     </div>
                     <div class="stat-content">
                         <h3 id="pendingOrders">-</h3>
-                        <p>Pending Orders</p>
+                        <p>Pending</p>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -94,15 +110,16 @@
             </div>
         </section>
 
-        <!-- Controls Section -->
-        <section class="controls-section">
-            <div class="controls-content">
-                <div class="search-filter">
-                    <div class="search-box">
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <!-- Search and Filters -->
+            <div class="controls">
+                <div class="search-section">
+                    <div class="search-bar">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="userSearch" placeholder="Search by User ID..." onkeyup="filterUsers()">
+                        <input type="text" id="userSearch" placeholder="Search users..." oninput="filterUsers()">
                     </div>
-                    <div class="filter-box">
+                    <div class="filters">
                         <select id="statusFilter" onchange="filterByStatus()">
                             <option value="">All Statuses</option>
                             <option value="pending">Pending</option>
@@ -114,31 +131,35 @@
                     </div>
                 </div>
                 <div class="view-controls">
-                    <button class="btn btn-secondary" onclick="toggleView('list')" id="listViewBtn">
-                        <i class="fas fa-list"></i> List View
+                    <button class="view-btn active" id="cardsViewBtn" onclick="toggleView('cards')">
+                        <i class="fas fa-th-large"></i> Cards
                     </button>
-                    <button class="btn btn-secondary active" onclick="toggleView('cards')" id="cardsViewBtn">
-                        <i class="fas fa-th-large"></i> Cards View
+                    <button class="view-btn" id="listViewBtn" onclick="toggleView('list')">
+                        <i class="fas fa-list"></i> List
                     </button>
                 </div>
             </div>
-        </section>
 
-        <!-- Main Content -->
-        <main class="main-content">
+            <!-- Loading Spinner -->
             <div class="loading-spinner" id="loadingSpinner">
-                <i class="fas fa-spinner fa-spin"></i>
+                <div class="spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
                 <p>Loading orders...</p>
             </div>
 
-            <div class="users-container" id="usersContainer" style="display: none;">
-                <!-- User cards will be dynamically inserted here -->
+            <!-- Users Container -->
+            <div class="users-container" id="usersContainer">
+                <!-- Orders will be displayed here -->
             </div>
 
-            <div class="no-data" id="noDataMessage" style="display: none;">
-                <i class="fas fa-inbox"></i>
-                <h3>No Orders Found</h3>
-                <p>There are no orders to display at the moment.</p>
+            <!-- No Data Message -->
+            <div class="no-data-message" id="noDataMessage" style="display: none;">
+                <div class="no-data-content">
+                    <i class="fas fa-inbox"></i>
+                    <h3>No Orders Found</h3>
+                    <p>No orders found for Kapuruka store. Create a new order to get started.</p>
+                </div>
             </div>
         </main>
 
@@ -179,6 +200,14 @@
                             <input type="text" id="newUserId" required placeholder="Enter user ID">
                         </div>
                         <div class="form-group">
+                            <label for="newOrderStore">Store</label>
+                            <select id="newOrderStore" required>
+                                <option value="glowmark">Glowmark</option>
+                                <option value="kapuruka" selected>Kapuruka</option>
+                                <option value="onlinekade">OnlineKade</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label>Items</label>
                             <div id="itemsList">
                                 <div class="item-row">
@@ -202,7 +231,7 @@
                     <button class="btn btn-primary" onclick="createOrder()">
                         <i class="fas fa-plus"></i> Create Order
                     </button>
-                </div>
+                    </div>
             </div>
         </div>
 
@@ -212,6 +241,6 @@
         </button>
     </div>
 
-    <script src="script.js"></script>
+    <script src="kapuruka-script.js"></script>
 </body>
 </html>
