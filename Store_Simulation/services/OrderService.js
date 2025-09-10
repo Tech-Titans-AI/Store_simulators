@@ -186,6 +186,9 @@ class OrderService {
           order.nextStatusUpdate = this.calculateNextStatusUpdate(nextStatus);
         } else {
           order.nextStatusUpdate = null;
+          
+          // Send inventory update when order is completed
+          await this.updateInventory(order);
         }
 
         await order.save();
@@ -241,6 +244,59 @@ class OrderService {
     } catch (error) {
       throw new Error(`Failed to get order statistics: ${error.message}`);
     }
+  }
+
+  // Send inventory update to external API when order is completed
+  static async updateInventory(order) {
+    try {
+      console.log(`Updating inventory for completed order: ${order.orderId}`);
+      
+      for (const item of order.items) {
+        const inventoryData = {
+          name: item.title,
+          quantity: item.quantity,
+          unit: "pieces", // Default unit, could be made configurable
+          category: this.getCategoryByStore(order.store),
+          expiry: this.calculateExpiryDate()
+        };
+
+        const response = await fetch('http://localhost:3001/api/inventory', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(inventoryData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(`✓ Inventory updated for item: ${item.title}`, result);
+        } else {
+          console.error(`✗ Failed to update inventory for item: ${item.title}`, await response.text());
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to update inventory for order ${order.orderId}:`, error.message);
+      // Don't throw error - inventory update failure shouldn't block order completion
+    }
+  }
+
+  // Helper function to determine category based on store
+  static getCategoryByStore(store) {
+    const storeCategories = {
+      'glowmark': 'Grain',           // Beauty & Personal Care -> Dairy (closest valid category)
+      'kapruka': 'Grains',           // Food & Beverages -> Fruits  
+      'lassana_flora': 'Grains', // Health & Wellness -> Vegetables
+      'onlinekade': 'Grains'           // Electronics & Technology -> Meat (general category)
+    };
+    return storeCategories[store] || 'Vegetables';
+  }
+
+  // Helper function to calculate expiry date (30 days from now)
+  static calculateExpiryDate() {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date.toISOString().split('T')[0]; // Format as YYYY-MM-DD
   }
 }
 
