@@ -7,7 +7,7 @@ let allUsers = [];
 let allOrders = [];
 let selectedOrder = null;
 let refreshTimer = null;
-let currentStore = 'kapuruka'; // Fixed to Glowmark
+let currentStore = 'kapruka'; // Fixed to Kapruka
 
 // Store switching function with navigation
 function switchStore(store) {
@@ -24,11 +24,11 @@ function switchTab(store) {
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    // Set initial theme for Glowmark
-    console.log('DOM loaded, initializing Glowmark store...');
+    // Set initial theme for Kapruka
+    console.log('DOM loaded, initializing Kapruka store...');
     
     // Set theme
-    document.body.className = 'theme-kapuruka';
+    document.body.className = 'theme-kapruka';
     
     // Initialize the app
     await initializeApp();

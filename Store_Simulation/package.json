@@ -24,7 +24,7 @@
     "jest": "^29.6.4",
     "supertest": "^6.3.3"
   },
-  "keywords": ["api", "mongodb", "order-simulation", "express", "multi-store", "glowmark", "kapuruka"],
+  "keywords": ["api", "mongodb", "order-simulation", "express", "multi-store", "glowmark", "kapruka"],
   "author": "Tech-Titans-AI",
   "license": "MIT"
 }

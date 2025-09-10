@@ -7,7 +7,7 @@ router.get('/health', (req, res) => {
   res.json({
     success: true,
     message: 'Multi-Store Order Simulator API is running',
-    stores: ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'],
+    stores: ['glowmark', 'kapruka', 'lassana_flora', 'onlinekade'],
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
@@ -45,7 +45,7 @@ router.get('/docs', (req, res) => {
     title: 'Multi-Store Order Simulator API',
     version: '2.0.0',
     description: 'API for simulating order processing across multiple stores with automatic status progression',
-    supportedStores: ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'],
+    supportedStores: ['glowmark', 'kapruka', 'lassana_flora', 'onlinekade'],
     endpoints: {
       glowmarkOrders: {
         'POST /api/orders/glowmark': 'Create a new Glowmark order',
@@ -110,7 +110,7 @@ router.get('/docs', (req, res) => {
     },
     orderIdFormats: {
       glowmark: 'GLW-timestamp-hash',
-      kapuruka: 'KPR-timestamp-hash',
+      kapruka: 'KPR-timestamp-hash',
       lassana_flora: 'LSF-timestamp-hash',
       onlinekade: 'OLK-timestamp-hash'
     }

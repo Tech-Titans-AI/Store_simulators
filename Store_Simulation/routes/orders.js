@@ -30,15 +30,15 @@ router.post('/glowmark', addStoreContext('glowmark'), async (req, res) => {
   }
 });
 
-// Kapuruka-specific create order
-router.post('/kapuruka', addStoreContext('kapuruka'), async (req, res) => {
+// kapruka-specific create order
+router.post('/kapruka', addStoreContext('kapruka'), async (req, res) => {
   try {
-    const orderData = { ...req.body, store: 'kapuruka' };
+    const orderData = { ...req.body, store: 'kapruka' };
     const order = await OrderService.createOrder(orderData);
     res.status(201).json({
       success: true,
-      message: 'Kapuruka order created successfully',
-      store: 'kapuruka',
+      message: 'kapruka order created successfully',
+      store: 'kapruka',
       data: order
     });
   } catch (error) {
@@ -226,10 +226,10 @@ router.get('/glowmark/stats/summary', async (req, res) => {
   }
 });
 
-// ==================== KAPURUKA STORE ENDPOINTS ====================
+// ==================== kapruka STORE ENDPOINTS ====================
 
-// Get all Kapuruka orders for a specific user
-router.get('/kapuruka/user/:userId', async (req, res) => {
+// Get all kapruka orders for a specific user
+router.get('/kapruka/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
     const { limit, skip, status } = req.query;
@@ -237,7 +237,7 @@ router.get('/kapuruka/user/:userId', async (req, res) => {
     const options = {
       limit: parseInt(limit) || 50,
       skip: parseInt(skip) || 0,
-      store: 'kapuruka'
+      store: 'kapruka'
     };
     
     if (status) {
@@ -248,8 +248,8 @@ router.get('/kapuruka/user/:userId', async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Kapuruka orders retrieved successfully',
-      store: 'kapuruka',
+      message: 'kapruka orders retrieved successfully',
+      store: 'kapruka',
       data: orders,
       count: orders.length
     });
@@ -262,25 +262,25 @@ router.get('/kapuruka/user/:userId', async (req, res) => {
   }
 });
 
-// Get specific Kapuruka order by order ID
-router.get('/kapuruka/:orderId', async (req, res) => {
+// Get specific kapruka order by order ID
+router.get('/kapruka/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
     const order = await OrderService.getOrderById(orderId);
     
-    // Verify it's a Kapuruka order
-    if (order.store && order.store !== 'kapuruka') {
+    // Verify it's a kapruka order
+    if (order.store && order.store !== 'kapruka') {
       return res.status(404).json({
         success: false,
-        message: 'Kapuruka order not found',
+        message: 'kapruka order not found',
         data: null
       });
     }
     
     res.json({
       success: true,
-      message: 'Kapuruka order retrieved successfully',
-      store: 'kapuruka',
+      message: 'kapruka order retrieved successfully',
+      store: 'kapruka',
       data: order
     });
   } catch (error) {
@@ -292,18 +292,18 @@ router.get('/kapuruka/:orderId', async (req, res) => {
   }
 });
 
-// Cancel Kapuruka order
-router.put('/kapuruka/:orderId/cancel', async (req, res) => {
+// Cancel kapruka order
+router.put('/kapruka/:orderId/cancel', async (req, res) => {
   try {
     const { orderId } = req.params;
     const { reason } = req.body;
     
-    // First check if it's a Kapuruka order
+    // First check if it's a kapruka order
     const existingOrder = await OrderService.getOrderById(orderId);
-    if (existingOrder.store && existingOrder.store !== 'kapuruka') {
+    if (existingOrder.store && existingOrder.store !== 'kapruka') {
       return res.status(404).json({
         success: false,
-        message: 'Kapuruka order not found',
+        message: 'kapruka order not found',
         data: null
       });
     }
@@ -312,8 +312,8 @@ router.put('/kapuruka/:orderId/cancel', async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Kapuruka order cancelled successfully',
-      store: 'kapuruka',
+      message: 'kapruka order cancelled successfully',
+      store: 'kapruka',
       data: order
     });
   } catch (error) {
@@ -325,16 +325,16 @@ router.put('/kapuruka/:orderId/cancel', async (req, res) => {
   }
 });
 
-// Get Kapuruka order statistics
-router.get('/kapuruka/stats/summary', async (req, res) => {
+// Get kapruka order statistics
+router.get('/kapruka/stats/summary', async (req, res) => {
   try {
     const { userId } = req.query;
-    const stats = await OrderService.getOrderStats(userId, 'kapuruka');
+    const stats = await OrderService.getOrderStats(userId, 'kapruka');
     
     res.json({
       success: true,
-      message: 'Kapuruka order statistics retrieved successfully',
-      store: 'kapuruka',
+      message: 'kapruka order statistics retrieved successfully',
+      store: 'kapruka',
       data: stats
     });
   } catch (error) {

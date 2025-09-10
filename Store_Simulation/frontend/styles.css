@@ -117,7 +117,7 @@ body {
     border-color: #4f46e5;
 }
 
-.theme-kapuruka .store-btn[data-store="kapuruka"].active {
+.theme-kapruka .store-btn[data-store="kapruka"].active {
     background: linear-gradient(135deg, #059669, #047857);
     color: white;
     border-color: #059669;
@@ -134,7 +134,7 @@ body.theme-glowmark {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-body.theme-kapuruka {
+body.theme-kapruka {
     background: linear-gradient(135deg, #059669 0%, #047857 100%);
 }
 
@@ -153,12 +153,12 @@ body.theme-onlinekade {
     color: #a5b4fc;
 }
 
-.theme-kapuruka .stat-card {
+.theme-kapruka .stat-card {
     background: rgba(219, 245, 237, 0.1);
     border: 1px solid rgba(5, 150, 105, 0.2);
 }
 
-.theme-kapuruka .stat-card .stat-icon {
+.theme-kapruka .stat-card .stat-icon {
     background: rgba(5, 150, 105, 0.2);
     color: #6ee7b7;
 }
@@ -178,7 +178,7 @@ body.theme-onlinekade {
     border-left: 4px solid #4f46e5;
 }
 
-.theme-kapuruka .user-card {
+.theme-kapruka .user-card {
     border-left: 4px solid #059669;
 }
 
@@ -195,11 +195,11 @@ body.theme-onlinekade {
     background: linear-gradient(45deg, #4338ca, #6d28d9);
 }
 
-.theme-kapuruka .btn-primary {
+.theme-kapruka .btn-primary {
     background: linear-gradient(45deg, #059669, #047857);
 }
 
-.theme-kapuruka .btn-primary:hover {
+.theme-kapruka .btn-primary:hover {
     background: linear-gradient(45deg, #047857, #065f46);
 }
 
@@ -221,12 +221,12 @@ body.theme-onlinekade {
     box-shadow: 0 12px 35px rgba(79, 70, 229, 0.6);
 }
 
-.theme-kapuruka .fab {
+.theme-kapruka .fab {
     background: linear-gradient(45deg, #059669, #047857);
     box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
 }
 
-.theme-kapuruka .fab:hover {
+.theme-kapruka .fab:hover {
     box-shadow: 0 12px 35px rgba(5, 150, 105, 0.6);
 }
 

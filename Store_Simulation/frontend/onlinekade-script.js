@@ -7,7 +7,7 @@ let allUsers = [];
 let allOrders = [];
 let selectedOrder = null;
 let refreshTimer = null;
-let currentStore = 'onlinekade'; // Fixed to Glowmark
+let currentStore = 'onlinekade'; // Fixed to OnlineKade
 
 // Store switching function with navigation
 function switchStore(store) {
@@ -24,8 +24,8 @@ function switchTab(store) {
 
 // Initialize when the page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    // Set initial theme for Glowmark
-    console.log('DOM loaded, initializing Glowmark store...');
+    // Set initial theme for OnlineKade
+    console.log('DOM loaded, initializing OnlineKade store...');
     
     // Set theme
     document.body.className = 'theme-onlinekade';

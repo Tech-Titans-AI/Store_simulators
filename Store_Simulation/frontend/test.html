@@ -14,7 +14,7 @@
         }
         
         .theme-glowmark { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .theme-kapuruka { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .theme-kapruka { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
         .theme-onlinekade { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); }
         
         .store-navigation {
@@ -69,7 +69,7 @@
             border-color: #4f46e5;
         }
 
-        .theme-kapuruka .store-btn[data-store="kapuruka"].active {
+        .theme-kapruka .store-btn[data-store="kapruka"].active {
             background: linear-gradient(135deg, #059669, #047857);
             color: white;
             border-color: #059669;
@@ -99,8 +99,8 @@
             <button class="store-btn active" data-store="glowmark" onclick="switchStore('glowmark')">
                 <span>💎 Glowmark</span>
             </button>
-            <button class="store-btn" data-store="kapuruka" onclick="switchStore('kapuruka')">
-                <span>🛍️ Kapuruka</span>
+            <button class="store-btn" data-store="kapruka" onclick="switchStore('kapruka')">
+                <span>🛍️ kapruka</span>
             </button>
             <button class="store-btn" data-store="onlinekade" onclick="switchStore('onlinekade')">
                 <span>💻 OnlineKade</span>
@@ -139,7 +139,7 @@
             // Update content
             const storeNames = {
                 'glowmark': 'Glowmark',
-                'kapuruka': 'Kapuruka',
+                'kapruka': 'kapruka',
                 'onlinekade': 'OnlineKade'
             };
             document.getElementById('currentStore').textContent = storeNames[store];

@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kapuruka Store - Order Management</title>
+    <title>kapruka Store - Order Management</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="theme-kapuruka">
+<body class="theme-kapruka">
     <div class="admin-container">
         <!-- Header -->
         <header class="header">
@@ -18,9 +18,9 @@
                 <div class="logo-section">
                     <div class="logo-placeholder">
                         <i class="fas fa-shopping-bag"></i>
-                        <span id="currentStoreName">Kapuruka</span>
+                        <span id="currentStoreName">kapruka</span>
                     </div>
-                    <h1>Kapuruka Store - Order Management</h1>
+                    <h1>kapruka Store - Order Management</h1>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-primary" onclick="refreshData()">
@@ -40,9 +40,9 @@
                 <i class="fas fa-gem"></i>
                 Glowmark
             </button>
-            <button class="store-btn active" data-store="kapuruka" onclick="switchStore('kapuruka')">
+            <button class="store-btn active" data-store="kapruka" onclick="switchStore('kapruka')">
                 <i class="fas fa-shopping-bag"></i>
-                Kapuruka
+                kapruka
             </button>
             <button class="store-btn" data-store="onlinekade" onclick="switchStore('onlinekade')">
                 <i class="fas fa-laptop"></i>
@@ -158,7 +158,7 @@
                 <div class="no-data-content">
                     <i class="fas fa-inbox"></i>
                     <h3>No Orders Found</h3>
-                    <p>No orders found for Kapuruka store. Create a new order to get started.</p>
+                    <p>No orders found for kapruka store. Create a new order to get started.</p>
                 </div>
             </div>
         </main>
@@ -203,7 +203,7 @@
                             <label for="newOrderStore">Store</label>
                             <select id="newOrderStore" required>
                                 <option value="glowmark">Glowmark</option>
-                                <option value="kapuruka" selected>Kapuruka</option>
+                                <option value="kapruka" selected>kapruka</option>
                                 <option value="onlinekade">OnlineKade</option>
                             </select>
                         </div>
@@ -241,6 +241,6 @@
         </button>
     </div>
 
-    <script src="kapuruka-script.js"></script>
+    <script src="kapruka-script.js"></script>
 </body>
 </html>

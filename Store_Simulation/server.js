@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
     success: true,
     message: 'Welcome to Multi-Store Order Simulator API',
     version: '2.0.0',
-    stores: ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'],
+    stores: ['glowmark', 'kapruka', 'lassana_flora', 'onlinekade'],
     documentation: '/api/docs',
     health: '/api/health'
   });
@@ -83,7 +83,7 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 Multi-Store Order Simulator API running on port ${PORT}`);
   console.log(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
   console.log(`💚 Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`🏪 Supported Stores: glowmark, kapuruka, lassana_flora, onlinekade`);
+  console.log(`🏪 Supported Stores: glowmark, kapruka, lassana_flora, onlinekade`);
   
   // Start the order status scheduler
   orderStatusScheduler.start();

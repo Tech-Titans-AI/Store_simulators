@@ -6,7 +6,7 @@ class OrderService {
   static generateOrderId(store = 'glowmark') {
     const storePrefix = {
       'glowmark': 'GLW',
-      'kapuruka': 'KPR',
+      'kapruka': 'KPR',
       'lassana_flora': 'LSF',
       'onlinekade': 'OLK'
     };
@@ -53,7 +53,7 @@ class OrderService {
       }
 
       // Validate store
-      const validStores = ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'];
+      const validStores = ['glowmark', 'kapruka', 'lassana_flora', 'onlinekade'];
       if (!validStores.includes(store)) {
         throw new Error(`Invalid store. Must be one of: ${validStores.join(', ')}`);
       }

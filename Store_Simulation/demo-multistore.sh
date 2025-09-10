@@ -77,11 +77,11 @@ GENERIC_ORDER_RESPONSE=$(curl -s -X POST "$API_BASE/api/orders" \
   -H "Content-Type: application/json" \
   -d '{
     "userId": "demo-user-002",
-    "store": "kapuruka",
+    "store": "kapruka",
     "items": [
       {
         "productId": "KPR001",
-        "title": "Kapuruka Special Tea 100G",
+        "title": "kapruka Special Tea 100G",
         "price": 450,
         "quantity": 3
       }
@@ -89,7 +89,7 @@ GENERIC_ORDER_RESPONSE=$(curl -s -X POST "$API_BASE/api/orders" \
   }')
 
 GENERIC_ORDER_ID=$(echo $GENERIC_ORDER_RESPONSE | jq -r '.data.orderId')
-print_success "Created Kapuruka order via generic endpoint: $GENERIC_ORDER_ID"
+print_success "Created kapruka order via generic endpoint: $GENERIC_ORDER_ID"
 echo $GENERIC_ORDER_RESPONSE | jq '.data | {orderId, userId, status, totalAmount, store}'
 
 # Get Glowmark-specific user orders
@@ -108,9 +108,9 @@ curl -s "$API_BASE/api/orders/glowmark/$GLOWMARK_ORDER_ID" | jq '.store, .data |
 print_section "8. Getting Glowmark Order Status"
 curl -s "$API_BASE/api/orders/glowmark/$GLOWMARK_ORDER_ID/status" | jq '.store, .data | {orderId, status, store, statusHistory: .statusHistory | map(.status)}'
 
-# Try to access Kapuruka order via Glowmark endpoint (should fail)
+# Try to access kapruka order via Glowmark endpoint (should fail)
 print_section "9. Testing Store Isolation"
-print_info "Attempting to access Kapuruka order via Glowmark endpoint (should fail):"
+print_info "Attempting to access kapruka order via Glowmark endpoint (should fail):"
 curl -s "$API_BASE/api/orders/glowmark/$GENERIC_ORDER_ID" | jq '.success, .message'
 
 # Cancel Glowmark order
@@ -135,7 +135,7 @@ print_section "13. Monitoring Status Progression"
 echo "The remaining orders will automatically progress through statuses every minute:"
 echo "pending → in_transit → store_pickup → completed"
 echo ""
-echo "Current Kapuruka order status:"
+echo "Current kapruka order status:"
 curl -s "$API_BASE/api/orders/$GENERIC_ORDER_ID/status" | jq '.data.status, .data.store'
 
 print_section "14. New Endpoint Summary"
@@ -153,7 +153,7 @@ echo "   GET    /api/orders/stats/summary (aggregated by store)"
 echo ""
 echo "🆔 Order ID Formats:"
 echo "   Glowmark:     GLW-timestamp-hash"
-echo "   Kapuruka:     KPR-timestamp-hash"
+echo "   kapruka:     KPR-timestamp-hash"
 echo "   Lassana Flora: LSF-timestamp-hash"
 echo "   OnlineKade:   OLK-timestamp-hash"
 
@@ -161,7 +161,7 @@ print_section "Demo Complete!"
 echo "🎉 Multi-store functionality tested successfully!"
 echo ""
 echo "Next steps for other stores:"
-echo "1. Copy this structure for other stores (Kapuruka, Lassana Flora, OnlineKade)"
-echo "2. Create store-specific endpoints: /api/orders/kapuruka, /api/orders/lassana_flora, etc."
+echo "1. Copy this structure for other stores (kapruka, Lassana Flora, OnlineKade)"
+echo "2. Create store-specific endpoints: /api/orders/kapruka, /api/orders/lassana_flora, etc."
 echo "3. Each store will have isolated order management"
 echo "4. Generic endpoints work across all stores"

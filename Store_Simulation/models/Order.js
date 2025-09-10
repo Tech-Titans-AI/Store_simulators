@@ -58,7 +58,7 @@ const orderSchema = new mongoose.Schema({
     type: String,
     required: true,
     default: 'glowmark',
-    enum: ['glowmark', 'kapuruka', 'lassana_flora', 'onlinekade'], // Add other stores as needed
+    enum: ['glowmark', 'kapruka', 'lassana_flora', 'onlinekade'], // Add other stores as needed
     index: true
   },
   items: [orderItemSchema],
