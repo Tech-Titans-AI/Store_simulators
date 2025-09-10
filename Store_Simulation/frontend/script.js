@@ -1,5 +1,5 @@
 // Configuration
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:3005';
 const REFRESH_INTERVAL = 10000; // 10 seconds
 
 // Global state

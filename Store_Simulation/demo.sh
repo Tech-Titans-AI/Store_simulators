@@ -6,7 +6,7 @@
 echo "🚀 Glowmark Order Simulator API Example Usage"
 echo "=============================================="
 
-API_BASE="http://localhost:3000"
+API_BASE="http://localhost:3005"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -144,6 +144,6 @@ echo "🎉 All API endpoints tested successfully!"
 echo ""
 echo "Next steps:"
 echo "1. Start the server: npm start"
-echo "2. Visit http://localhost:3000/api/docs for documentation"
+echo "2. Visit http://localhost:3005/api/docs for documentation"
 echo "3. Monitor automatic status progression"
 echo "4. Integrate with your shopping application"

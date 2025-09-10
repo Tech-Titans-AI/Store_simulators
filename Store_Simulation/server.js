@@ -16,7 +16,7 @@ const systemRoutes = require('./routes/system');
 const { errorHandler, notFound, requestLogger, responseTime } = require('./middleware');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3005;
 
 // Connect to MongoDB
 connectDB();
@@ -43,7 +43,7 @@ app.use(limiter);
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://yourdomain.com'] 
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://127.0.0.1:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
+    : ['http://localhost:3005', 'http://localhost:3001', 'http://127.0.0.1:3005', 'http://localhost:5500', 'http://127.0.0.1:5500', 'http://localhost:8080', 'http://127.0.0.1:8080'],
   credentials: true
 }));
 

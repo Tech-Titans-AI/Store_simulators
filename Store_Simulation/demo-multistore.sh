@@ -6,7 +6,7 @@
 echo "🏪 Multi-Store Order Simulator API Example Usage"
 echo "=============================================="
 
-API_BASE="http://localhost:3000"
+API_BASE="http://localhost:3005"
 
 # Colors for output
 GREEN='\033[0;32m'
