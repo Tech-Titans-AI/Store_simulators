@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const Order = require('../models/Order');
 
 // Test database
-const MONGODB_URI = 'mongodb://localhost:27017/test_ecommerce_db';
+const MONGODB_URI = 'mongodb+srv://yasirunipunbasnayake2_db_user:hFIS1XVxBmbaC5Ro@techtitans0.c5azljc.mongodb.net/test_ecommerce_db';
 
 // Create app without starting server
 const express = require('express');
