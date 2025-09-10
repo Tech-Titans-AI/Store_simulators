@@ -285,9 +285,9 @@ class OrderService {
   static getCategoryByStore(store) {
     const storeCategories = {
       'glowmark': 'Grain',           // Beauty & Personal Care -> Dairy (closest valid category)
-      'kapruka': 'Grains',           // Food & Beverages -> Fruits  
-      'lassana_flora': 'Grains', // Health & Wellness -> Vegetables
-      'onlinekade': 'Grains'           // Electronics & Technology -> Meat (general category)
+      'kapruka': 'Other',           // Food & Beverages -> Fruits  
+      'lassana_flora': 'Other', // Health & Wellness -> Vegetables
+      'onlinekade': 'Other'           // Electronics & Technology -> Meat (general category)
     };
     return storeCategories[store] || 'Vegetables';
   }
